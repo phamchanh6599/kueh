@@ -1,8 +1,9 @@
 import "./Section.scss";
-import React from "react";
+import React, { useState } from "react";
 
-import { IProducts, ICommonSection } from "../../utils/constant";
+import { IProducts } from "../../utils/constant";
 import ListCard from "../ListCard/ListCard";
+import ModalProduct from "../../components/ModalProduct/ModalProduct";
 
 interface ISection {
   title: string;
@@ -20,6 +21,14 @@ const Section: React.FC<ISection> = ({
   disabledReason,
 }) => {
   const SectionClass = `Section ${isDisabled ? "Section--disabled" : ""}`;
+  const [isShowModal, setIsShowModal] = useState(false);
+  const [itemModal, setItemModal] = useState<IProducts>();
+
+  const handleClickItem = (item: IProducts) => {
+    console.log("item", item);
+    setItemModal(item);
+    setIsShowModal(true);
+  };
 
   return (
     <div className={SectionClass}>
@@ -36,7 +45,16 @@ const Section: React.FC<ISection> = ({
       </div>
 
       {/* Card  */}
-      <ListCard listItems={listItems} />
+      <ListCard listItems={listItems} handleClickItem={handleClickItem} />
+
+      {/* Modal  */}
+      <ModalProduct
+        onClose={() => setIsShowModal(false)}
+        isShowModal={isShowModal}
+        imageUrl={itemModal?.imageUrl}
+        description={itemModal?.description}
+        label={itemModal?.label}
+      />
     </div>
   );
 };

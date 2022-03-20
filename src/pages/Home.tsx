@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 
-import { ISections } from "../utils/constant";
 import Section from "../common-components/Section/Section";
 import Layout from "../components/Layout/Layout";
+
+import { ISections } from "../utils/constant";
+
 import * as menu from "./../api/menu/menu";
 
 const URL = "https://atlas-fe-menu.atlas-kitchen.workers.dev/menu";

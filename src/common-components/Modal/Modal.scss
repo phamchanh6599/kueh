@@ -1,0 +1,61 @@
+@import "../../styles/variable.scss";
+@import "../../styles/styles.scss";
+
+.Modal {
+  position: relative;
+
+  &__close-icon {
+    position: absolute;
+    right: 0;
+    cursor: pointer;
+    padding-right: 1rem;
+    padding-top: 1rem;
+    font-size: 1.5rem;
+  }
+
+  &__circle-close {
+    border-radius: 9999px;
+    padding: 0.25rem 0.7rem;
+    background-color: #ffffff;
+  }
+
+  &__background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+  }
+
+  &__modal {
+    position: fixed;
+    background-color: $white;
+    border: 1px solid $white;
+    border-radius: 10px;
+    outline: 0;
+    z-index: 1001;
+    transform: translate(-50%, -100%);
+    transition: all 0.4s;
+    visibility: visible;
+    min-height: 300px;
+    position: fixed;
+    left: 50%;
+    top: 85%;
+
+    @include tablet {
+      top: 100%;
+    }
+  }
+  transition: all 0.1s;
+}
+
+.none {
+  transform: translateY(0%);
+  opacity: 0;
+  transition: all 0.4s;
+  visibility: hidden;
+  display: none;
+  z-index: -1;
+}

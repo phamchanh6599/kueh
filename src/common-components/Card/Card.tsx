@@ -24,12 +24,8 @@ const Card: React.FC<ICard> = ({
   const CardTitle = `Card__title Card__title--${type}`;
   const CardContent = `Card__content Card__content--${type}`;
 
-  const handleClick = useCallback(() => {
-    onHandleClick();
-  }, [onHandleClick]);
-
   return (
-    <div className={CardClass}>
+    <div className={CardClass} onClick={onHandleClick}>
       {/* Image  */}
       <div className="Card__image">{image}</div>
 
@@ -42,8 +38,8 @@ const Card: React.FC<ICard> = ({
 
         {/* Bottom  */}
         <div className="Card__bottom">
-          <span>{price}</span>
-          <div>
+          <span className="Card__price">{price}</span>
+          <div className="Card__button">
             <Button
               type="primary"
               onHandleClick={onHandleClick}
