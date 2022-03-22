@@ -1,58 +1,65 @@
 import "./Sidebar.scss";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useContext,
+} from "react";
 
+import { HomeContext } from "../../context/HomeContext";
+import { useNavigation } from "../../hook/useNavigation";
+import { isInviewPort } from "../../utils/helper";
+
+const ID_SIDEBAR_TITLE = "sidebar-title";
 interface ISidebar {
-  title: string;
-  listNav: string[];
+  title?: string;
 }
 
-const Sidebar: React.FC<ISidebar> = ({ listNav, title }) => {
-  const [defaultValue, setDefaultValue] = useState("active");
+const Sidebar: React.FC<ISidebar> = ({ title }) => {
+  const homeContext = useContext(HomeContext);
+  const listNavigation = useNavigation(homeContext.listSection);
+
+  const [activeNav, setActiveNav] = homeContext.activeItem;
   const [isIsVisibleTitle, setIsVisibleTitle] = useState(true);
 
-  const isInViewport = useCallback(() => {
-    const title = document.getElementById("sidebar-title");
-    const rect = title?.getBoundingClientRect();
-    const isVisible = !!(
-      rect &&
-      rect?.top >= 0 &&
-      rect?.left >= 0 &&
-      rect?.bottom <=
-        (window.innerHeight || document.documentElement.clientHeight) &&
-      rect?.right <= (window.innerWidth || document.documentElement.clientWidth)
-    );
-
+  const isInViewPort = useCallback(() => {
+    const isVisible = isInviewPort(ID_SIDEBAR_TITLE);
     setIsVisibleTitle(isVisible);
   }, []);
 
   useEffect(() => {
-    window.addEventListener("scroll", isInViewport);
+    if (!activeNav) setActiveNav(listNavigation[0]?.id);
+  }, [activeNav, listNavigation, setActiveNav]);
 
-    return () => window.removeEventListener("scroll", isInViewport);
-  }, [isInViewport]);
+  useEffect(() => {
+    window.addEventListener("scroll", isInViewPort);
+
+    return () => window.removeEventListener("scroll", isInViewPort);
+  }, [isInViewPort]);
 
   const onHandleClick = useCallback(
     (item: string) => () => {
-      setDefaultValue(item);
+      setActiveNav(item);
     },
-    []
+    [setActiveNav]
   );
 
   const _renderNav = useCallback(() => {
-    return listNav.map((item, idx) => {
+    return listNavigation.map((item, idx) => {
       return (
         <div
           key={idx}
           className={`Sidebar__item ${
-            defaultValue === item ? "Sidebar--active" : ""
+            activeNav === item?.id ? "Sidebar--active" : ""
           }`}
-          onClick={onHandleClick(item)}
+          onClick={onHandleClick(item?.id)}
         >
-          {item}
+          {item?.label}
         </div>
       );
     });
-  }, [listNav, defaultValue, onHandleClick]);
+  }, [listNavigation, activeNav, onHandleClick]);
 
   const SidebarContentClass = useMemo(
     () =>
@@ -62,9 +69,14 @@ const Sidebar: React.FC<ISidebar> = ({ listNav, title }) => {
 
   return (
     <div className="Sidebar">
-      <div className="Sidebar__title" id="sidebar-title">
-        {title}
-      </div>
+      {/* Title  */}
+      {title && (
+        <div className="Sidebar__title" id={ID_SIDEBAR_TITLE}>
+          {title}
+        </div>
+      )}
+
+      {/* List navigation  */}
       <div className="Sidebar__container">
         <div className={SidebarContentClass}>{_renderNav()}</div>
       </div>

@@ -7,7 +7,7 @@ interface ICard {
   type: "primary" | "secondary";
   image?: React.ReactNode;
   title: string;
-  content: React.ReactNode;
+  content: string;
   price: React.ReactNode;
   onHandleClick: () => void;
 }
@@ -33,7 +33,10 @@ const Card: React.FC<ICard> = ({
       <div className="Card__container">
         <div className="Card__top">
           <div className={CardTitle}>{title}</div>
-          <div className={CardContent}>{content}</div>
+          <div
+            className={CardContent}
+            dangerouslySetInnerHTML={{ __html: content }}
+          />
         </div>
 
         {/* Bottom  */}

@@ -11,6 +11,7 @@ interface ISection {
   listItems: IProducts[];
   isDisabled?: boolean;
   disabledReason?: string;
+  sectionId: string;
 }
 
 const Section: React.FC<ISection> = ({
@@ -19,19 +20,19 @@ const Section: React.FC<ISection> = ({
   listItems = [],
   isDisabled,
   disabledReason,
+  sectionId,
 }) => {
   const SectionClass = `Section ${isDisabled ? "Section--disabled" : ""}`;
   const [isShowModal, setIsShowModal] = useState(false);
   const [itemModal, setItemModal] = useState<IProducts>();
 
   const handleClickItem = (item: IProducts) => {
-    console.log("item", item);
     setItemModal(item);
     setIsShowModal(true);
   };
 
   return (
-    <div className={SectionClass}>
+    <div className={SectionClass} id={sectionId}>
       {/* Title  */}
       <div className="Section__content">
         <div className="Section__title">{title}</div>

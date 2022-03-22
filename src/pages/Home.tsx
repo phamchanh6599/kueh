@@ -1,39 +1,69 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import { useCallback, useContext, useEffect } from "react";
 
 import Section from "../common-components/Section/Section";
 import Layout from "../components/Layout/Layout";
 
 import { ISections } from "../utils/constant";
-
-import * as menu from "./../api/menu/menu";
-
-const URL = "https://atlas-fe-menu.atlas-kitchen.workers.dev/menu";
+import { HomeContext } from "../context/HomeContext";
+import { useNavigation } from "../hook/useNavigation";
 
 const Home = () => {
-  const [data, setData] = useState<ISections[]>();
+  const homeContext = useContext(HomeContext);
+  const listNavigation = useNavigation(homeContext.listSection);
+
+  const { listSection } = homeContext;
+  const [activeNav, setActiveNav] = homeContext.activeItem;
+
+  // const isInViewport = useCallback((id) => {
+  //   const title = document.getElementById(id);
+  //   const rect = title?.getBoundingClientRect();
+  //   const isVisible = !!(
+  //     rect &&
+  //     rect?.top >= 0 &&
+  //     rect?.left >= 0 &&
+  //     rect?.bottom <=
+  //       (window.innerHeight || document.documentElement.clientHeight) &&
+  //     rect?.right <= (window.innerWidth || document.documentElement.clientWidth)
+  //   );
+
+  //   console.log("rect?.bottom", rect?.bottom);
+  //   console.log(
+  //     "window.innerHeight",
+  //     window.innerHeight,
+  //     document.documentElement.clientHeight
+  //   );
+
+  //   console.log("bottom", rect && rect?.bottom <= window.innerHeight);
+
+  //   return isVisible;
+  // }, []);
+
+  // const findElement = useCallback(() => {
+  //   listNavigation.forEach((item) => {
+  //     const isVisible = isInViewport(item?.id);
+  //     if (isVisible) {
+  //       console.log("findElement", item?.id);
+  //       setActiveNav(item.id);
+  //     }
+  //   });
+  // }, [isInViewport, listNavigation, setActiveNav]);
+
+  // useEffect(() => {
+  //   window.addEventListener("scroll", findElement);
+
+  //   return () => window.removeEventListener("scroll", findElement);
+  // }, [findElement]);
 
   useEffect(() => {
-    const fetch = async () => {
-      try {
-        const res = await menu.fetchList(URL);
-        setData(res?.sections);
-        console.log("data", res);
-      } catch (err) {
-        console.error("ERR", err);
-      } finally {
-      }
-    };
-
-    fetch();
-  }, []);
-
-  const listNav = useMemo(
-    () => (data || []).map((item: any) => item?.label),
-    [data]
-  );
+    if (activeNav) {
+      document
+        ?.getElementById(activeNav)
+        ?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [activeNav]);
 
   const _renderSection = useCallback(() => {
-    return data
+    return listSection
       ?.sort((a, b) => a.displayOrder - b.displayOrder)
       ?.map((item: ISections) => {
         if (item?.items.length) {
@@ -45,6 +75,7 @@ const Home = () => {
                 listItems={item?.items}
                 isDisabled={item?.disabled}
                 disabledReason={item?.disabledReason}
+                sectionId={item?.id?.toString()}
               />
             </div>
           );
@@ -58,14 +89,15 @@ const Home = () => {
                 listItems={subItem?.items}
                 isDisabled={subItem?.disabled}
                 disabledReason={subItem?.disabledReason}
+                sectionId={`${subItem?.id?.toString()}-sub`}
               />
             </div>
           );
         });
       });
-  }, [data]);
+  }, [listSection]);
 
-  return <Layout list={listNav}>{_renderSection()}</Layout>;
+  return <Layout>{_renderSection()}</Layout>;
 };
 
 export default Home;

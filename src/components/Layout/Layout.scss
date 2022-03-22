@@ -7,7 +7,8 @@
   gap: 0.75rem;
   margin: 0 auto;
   max-width: 1280px;
-  padding-top: 1rem;
+  padding-top: 0.5rem;
+  position: relative;
 
   @include tablet {
     display: grid;
@@ -19,6 +20,19 @@
 
   &__sidebar {
     overflow-x: scroll;
+  }
+
+  &__sidebar--mobile {
+    display: none;
+
+    @include tablet {
+      overflow-x: scroll;
+      display: flex;
+      position: sticky;
+      left: 0;
+      bottom: -20px;
+      background-color: white;
+    }
   }
 
   &__content {

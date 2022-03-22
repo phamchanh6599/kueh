@@ -16,6 +16,7 @@
     justify-content: space-between;
     flex: 1 1 0%;
     padding-top: 2rem;
+    background-color: $grey;
   }
 
   &__image {
@@ -34,7 +35,6 @@
     padding: 1rem 2rem;
     width: 400px;
     margin-bottom: 1.5rem;
-
     @include tablet {
       padding: 1rem;
     }
