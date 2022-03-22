@@ -41,6 +41,19 @@
     }
   }
 
+  &__sidebar--mobile {
+    display: none;
+
+    @include tablet {
+      overflow-x: scroll;
+      display: flex;
+      position: sticky;
+      left: 0;
+      bottom: -20px;
+      background-color: white;
+    }
+  }
+
   &__content {
     width: 95%;
 

@@ -26,8 +26,6 @@
   &__container {
     @include tablet {
       overflow-x: scroll;
-      display: flex;
-      justify-content: center;
     }
   }
 
