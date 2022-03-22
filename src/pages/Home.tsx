@@ -1,39 +1,27 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import { useCallback, useContext, useEffect } from "react";
 
 import Section from "../common-components/Section/Section";
 import Layout from "../components/Layout/Layout";
 
 import { ISections } from "../utils/constant";
-
-import * as menu from "./../api/menu/menu";
-
-const URL = "https://atlas-fe-menu.atlas-kitchen.workers.dev/menu";
+import { HomeContext } from "../context/HomeContext";
 
 const Home = () => {
-  const [data, setData] = useState<ISections[]>();
+  const homeContext = useContext(HomeContext);
+
+  const { listSection } = homeContext;
+  const [activeNav] = homeContext.activeItem;
 
   useEffect(() => {
-    const fetch = async () => {
-      try {
-        const res = await menu.fetchList(URL);
-        setData(res?.sections);
-        console.log("data", res);
-      } catch (err) {
-        console.error("ERR", err);
-      } finally {
-      }
-    };
-
-    fetch();
-  }, []);
-
-  const listNav = useMemo(
-    () => (data || []).map((item: any) => item?.label),
-    [data]
-  );
+    if (activeNav) {
+      document
+        ?.getElementById(activeNav)
+        ?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [activeNav]);
 
   const _renderSection = useCallback(() => {
-    return data
+    return listSection
       ?.sort((a, b) => a.displayOrder - b.displayOrder)
       ?.map((item: ISections) => {
         if (item?.items.length) {
@@ -45,6 +33,7 @@ const Home = () => {
                 listItems={item?.items}
                 isDisabled={item?.disabled}
                 disabledReason={item?.disabledReason}
+                sectionId={item?.id?.toString()}
               />
             </div>
           );
@@ -58,14 +47,15 @@ const Home = () => {
                 listItems={subItem?.items}
                 isDisabled={subItem?.disabled}
                 disabledReason={subItem?.disabledReason}
+                sectionId={`${subItem?.id?.toString()}-sub`}
               />
             </div>
           );
         });
       });
-  }, [data]);
+  }, [listSection]);
 
-  return <Layout list={listNav}>{_renderSection()}</Layout>;
+  return <Layout>{_renderSection()}</Layout>;
 };
 
 export default Home;

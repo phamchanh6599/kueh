@@ -24,6 +24,7 @@ const ListCard: React.FC<IListCard> = ({ listItems, handleClickItem }) => {
                 style={{ width: "100%", height: "100%", objectFit: "contain" }}
                 src={item?.imageUrl}
                 alt={item?.label}
+                loading="lazy"
               />
             }
             title={item?.label}

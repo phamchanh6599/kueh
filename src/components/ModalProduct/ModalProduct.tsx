@@ -1,8 +1,6 @@
 import "./ModalProduct.scss";
 import React from "react";
 
-import { IProducts } from "../../utils/constant";
-
 import Modal from "../../common-components/Modal/Modal";
 import Button from "../../common-components/Button/Button";
 
@@ -37,7 +35,10 @@ const ModalProduct: React.FC<IModalProducts> = ({
           {/* Content  */}
           <div className="ModalProduct__content">
             <div className="ModalProduct__title">{label}</div>
-            <div className="ModalProduct__description">{description}</div>
+            <div
+              className="ModalProduct__description"
+              dangerouslySetInnerHTML={{ __html: description }}
+            />
           </div>
 
           {/* Button  */}
