@@ -16,6 +16,7 @@ You will also see any lint errors in the console.
 ### `Optimize`
 
 - Prevent multiple re-renders
+- Lazy load image
 
 ### `Live Demo`
 
