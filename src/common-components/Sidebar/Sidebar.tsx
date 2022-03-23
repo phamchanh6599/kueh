@@ -21,6 +21,7 @@ const Sidebar: React.FC<ISidebar> = ({ title }) => {
   const listNavigation = useNavigation(homeContext.listSection);
 
   const [activeNav, setActiveNav] = homeContext.activeItem;
+  const [, setIsAutoScroll] = homeContext.autoScroll;
   const [isIsVisibleTitle, setIsVisibleTitle] = useState(true);
 
   const isInViewPort = useCallback(() => {
@@ -41,8 +42,9 @@ const Sidebar: React.FC<ISidebar> = ({ title }) => {
   const onHandleClick = useCallback(
     (item: string) => () => {
       setActiveNav(item);
+      setIsAutoScroll(false);
     },
-    [setActiveNav]
+    [setActiveNav, setIsAutoScroll]
   );
 
   const _renderNav = useCallback(() => {

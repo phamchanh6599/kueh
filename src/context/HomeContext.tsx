@@ -8,15 +8,18 @@ const URL = "https://atlas-fe-menu.atlas-kitchen.workers.dev/menu";
 interface IHomeContext {
   listSection: ISections[];
   activeItem: any[];
+  autoScroll: any[];
 }
 
 export const HomeContext = createContext<IHomeContext>({
   listSection: [],
   activeItem: [],
+  autoScroll: [],
 });
 
 export const HomeProvider = (props: any) => {
   const [activeNav, setActiveNav] = useState("");
+  const [isAutoScroll, setIsAutoScroll] = useState(true);
   const [data, setData] = useState<ISections[]>();
 
   useEffect(() => {
@@ -37,6 +40,7 @@ export const HomeProvider = (props: any) => {
       value={{
         listSection: data || [],
         activeItem: [activeNav, setActiveNav],
+        autoScroll: [isAutoScroll, setIsAutoScroll],
       }}
     >
       {props.children}

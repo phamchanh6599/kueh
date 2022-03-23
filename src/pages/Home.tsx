@@ -5,20 +5,58 @@ import Layout from "../components/Layout/Layout";
 
 import { ISections } from "../utils/constant";
 import { HomeContext } from "../context/HomeContext";
+import { useNavigation } from "../hook/useNavigation";
 
 const Home = () => {
   const homeContext = useContext(HomeContext);
+  const listNavigation = useNavigation(homeContext.listSection);
 
   const { listSection } = homeContext;
-  const [activeNav] = homeContext.activeItem;
+  const [activeNav, setActiveNav] = homeContext.activeItem;
+  const [isAutoScroll, setIsAutoScroll] = homeContext.autoScroll;
+
+  const isInViewPort = useCallback((id: string) => {
+    const ele = document.getElementById(id);
+
+    const { top, bottom } = ele?.getBoundingClientRect() ?? {
+      top: "",
+      bottom: "",
+    };
+    const vHeight = window.innerHeight || document.documentElement.clientHeight;
+    const isVisible = (top > 0 || bottom > 0) && top < vHeight;
+
+    return isVisible;
+  }, []);
+
+  const findElement = useCallback(() => {
+    if (!isAutoScroll) return;
+
+    listNavigation.forEach((item) => {
+      const isVisible = isInViewPort(item?.id);
+
+      if (isVisible) {
+        setActiveNav(item?.id);
+      }
+    });
+  }, [isAutoScroll, isInViewPort, listNavigation, setActiveNav]);
 
   useEffect(() => {
-    if (activeNav) {
+    window.addEventListener("scroll", findElement);
+
+    return () => window.removeEventListener("scroll", findElement);
+  }, [findElement]);
+
+  useEffect(() => {
+    if (activeNav && !isAutoScroll) {
       document
         ?.getElementById(activeNav)
         ?.scrollIntoView({ behavior: "smooth" });
+
+      setTimeout(() => {
+        setIsAutoScroll(true);
+      }, 1000);
     }
-  }, [activeNav]);
+  }, [activeNav, isAutoScroll, setIsAutoScroll]);
 
   const _renderSection = useCallback(() => {
     return listSection
